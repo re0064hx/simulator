@@ -9,4 +9,4 @@ Car simulator based on single-track model.
 - imagemagic
 
 ## Simulator Demo
-![result](https://github.com/re0064hx/simulator/blob/master/AnimResults/20191130-204849.gif)
+![result](https://github.com/re0064hx/simulator/blob/master/simulation.gif)
