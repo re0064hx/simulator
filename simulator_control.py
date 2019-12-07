@@ -14,7 +14,7 @@ import matplotlib.animation as animation
 
 Num_episodes = 1
 MOV_FLAG = True
-Tf = 5
+Tf = 30
 Ts = 0.05
 dt = Ts
 k_num = round(Tf/Ts)
@@ -109,6 +109,7 @@ class Vehicle():
 
         # return state, reward, done
 
+# PathPlannerクラスの定義
 class PathPlanner():
     def __init__(self):
         self.X = np.zeros((k_num, 1))
@@ -117,33 +118,38 @@ class PathPlanner():
         self.rho = np.zeros((k_num, 1))
 
     def path_generation(self):
-        csv_input = pd.read_csv('reference_path.csv')
+        # csv_input = pd.read_csv('reference_path.csv')
+        csv_input = pd.read_csv('oval_course.csv')
         Path = csv_input.values
         print(len(Path))
-        for cnt in range(len(Path)):
+        for cnt in range(k_num):
             self.X[cnt, 0] = Path[cnt, 0]
             self.Y[cnt, 0] = Path[cnt, 1]
             self.theta[cnt, 0] = np.arctan2(self.Y[cnt, 0], self.X[cnt, 0])
             # self.rho =
 
-def PFC(l):
-    '''
-    This function is calculate lateral control input
-    based on Kanayama's method.
-    '''
-    K2 = 0.05
-    K3 = 0.2
-    rho = 0
-    # e2 = RefPath.Y[l-1, 0] - Car0.Y[l-1, 0]
-    # e3 = RefPath.theta[l-1, 0] - Car0.theta[l-1, 0]
+# 車両制御コントローラの定義
+class controller():
+    def __init__(self):
+        self.delta = 0
 
-    term1 = (Car0.Kf*Car0.lf - Car0.Kr*Car0.lr)/(Car0.Kf*Car0.V[l-1, 0]) * Car0.YR[l-1, 0]
-    term2 = (Car0.Kf + Car0.Kr)/(Car0.Kf) * Car0.beta[l-1, 0]
-    term3 = (Car0.m * Car0.V[l-1, 0])/(2*Car0.Kf) * (rho*(Car0.V[l-1, 0]*np.cos(Car0.e3[l-1, 0]))/(1-Car0.e2[l-1, 0]*rho) - K2*Car0.e2[l-1, 0]*Car0.V[l-1, 0] - K3*np.sin(Car0.e3[l-1, 0]))
+    def PFC(self, l):
+        '''
+        This function is calculate lateral control input
+        based on Kanayama's method.
+        '''
+        K2 = 0.05
+        K3 = 0.2
+        rho = 0
+        # e2 = RefPath.Y[l-1, 0] - Car0.Y[l-1, 0]
+        # e3 = RefPath.theta[l-1, 0] - Car0.theta[l-1, 0]
 
-    delta = term1 + term2 + term3
-    # delta = term3
-    return delta
+        term1 = (Car0.Kf*Car0.lf - Car0.Kr*Car0.lr)/(Car0.Kf*Car0.V[l-1, 0]) * Car0.YR[l-1, 0]
+        term2 = (Car0.Kf + Car0.Kr)/(Car0.Kf) * Car0.beta[l-1, 0]
+        term3 = (Car0.m * Car0.V[l-1, 0])/(2*Car0.Kf) * (rho*(Car0.V[l-1, 0]*np.cos(Car0.e3[l-1, 0]))/(1-Car0.e2[l-1, 0]*rho) - K2*Car0.e2[l-1, 0]*Car0.V[l-1, 0] - K3*np.sin(Car0.e3[l-1, 0]))
+
+        self.delta = term1 + term2 + term3
+        return self.delta
 
 def update(i):
     plt.cla()
@@ -311,7 +317,7 @@ def main():
             V = 18
             # delta = np.random.randn()
             delta = np.sin(np.pi*(m-1)*Ts/2.5)*2e-2
-            delta = PFC(m)
+            delta = ctrlfnc.PFC(m)
 
             # Calculate simulation values
             # print(m, ' time pasted.','\r', end='')
@@ -377,6 +383,7 @@ Car3 = Vehicle()
 Car4 = Vehicle()
 RefPath = PathPlanner()
 RefPath.path_generation()
+ctrlfnc = controller()
 
 if __name__ == "__main__":
     main()
