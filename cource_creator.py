@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 def plot_course(X,Y):
     f0 = plt.figure()
     ax1 = f0.add_subplot(111)
-    ax1.plot(X,Y)
+    ax1.plot(X,Y,'.r')
 
     plt.show()
 
@@ -26,17 +26,13 @@ def csv_output(X,Y):
             writer.writerow(csvlist)
 
 def main():
-    ds = 0.01
-    Ts = 0.1
+    R = 200 # 曲線距離
+    L = 100 # 直線距離
+    len_wp = 10.0
+    ds = len_wp/R
     theta1 = np.arange(-np.pi/2, np.pi/2, ds)
     theta2 = np.arange(np.pi/2, 3*np.pi/2, ds)
     # k_num = len(theta)
-
-    R = 200
-    L = 100
-    #コース座標値格納変数
-    # X = np.zeros([k_num,1])
-    # Y = np.zeros([k_num,1])
 
     X1 = R*np.cos(theta1) + L/2
     Y1 = R*np.sin(theta1) + R
@@ -44,13 +40,13 @@ def main():
     X2 = R*np.cos(theta2) - L/2
     Y2 = R*np.sin(theta2) + R
 
-    X3 = np.arange(0, L/2, Ts)
+    X3 = np.arange(0, L/2, len_wp)
     Y3 = np.zeros([len(X3)])
 
-    X4 = np.arange(L/2, -L/2, Ts)
+    X4 = -np.arange(-L/2, L/2, len_wp)
     Y4 = 2*R*np.ones([len(X4)])
 
-    X5 = np.arange(-L/2, 0, Ts)
+    X5 = np.arange(-L/2, 0, len_wp)
     Y5 = np.zeros([len(X3)])
 
     X = np.hstack([X3,X1,X2,X4,X5])
