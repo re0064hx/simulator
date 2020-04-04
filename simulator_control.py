@@ -26,10 +26,10 @@ def main():
         # Set initial parameters
         # (x, y, V, delta, theta, YR, beta, length, width, dt)
         utils.Car0.Initialization(0, 0, 18, 0, 0, 0, 0, 4.8, 1.7, sets.dt)
-        utils.Car1.Initialization(30, 3.5, 16, 0, 0, 0, 0, 4.75, 1.75, sets.dt)
-        utils.Car2.Initialization(-30, 3.5, 18, 0, 0, 0, 0, 4.75, 1.75, sets.dt)
-        utils.Car3.Initialization(15, 0, 19, 0, 0, 0, 0, 4.75, 1.75, sets.dt)
-        utils.Car4.Initialization(-15, 0, 18, 0, 0, 0, 0, 4.75, 1.75, sets.dt)
+        # utils.Car1.Initialization(30, 3.5, 16, 0, 0, 0, 0, 4.75, 1.75, sets.dt)
+        # utils.Car2.Initialization(-30, 3.5, 18, 0, 0, 0, 0, 4.75, 1.75, sets.dt)
+        # utils.Car3.Initialization(15, 0, 19, 0, 0, 0, 0, 4.75, 1.75, sets.dt)
+        # utils.Car4.Initialization(-15, 0, 18, 0, 0, 0, 0, 4.75, 1.75, sets.dt)
 
         '''　各ループ 制御演算 '''
         for m in range(1, sets.k_num):
@@ -40,12 +40,12 @@ def main():
             delta = ctrlfnc.PFC(m)
 
             # Calculate simulation values
-            # print(m, ' time pasted.','\r', end='')
+            print(m, ' time pasted.','\r', end='')
             utils.Car0.state_update(m, V, delta)
-            utils.Car1.state_update(m, V, 0)
-            utils.Car2.state_update(m, V, 0)
-            utils.Car3.state_update(m, V, 0)
-            utils.Car4.state_update(m, V, 0)
+            # utils.Car1.state_update(m, V, 0)
+            # utils.Car2.state_update(m, V, 0)
+            # utils.Car3.state_update(m, V, 0)
+            # utils.Car4.state_update(m, V, 0)
 
         print('Finish Calculation.')
 
@@ -79,19 +79,19 @@ def main():
                 # 出力
                 writer.writerow(csvlist)
 
-        if sets.MOV_FLAG:
-            # Create new directory
-            os.makedirs('AnimResults', exist_ok=True)
-            ani = animation.FuncAnimation(sets.fig, utils.update, interval=sets.Ts*1e3, frames=sets.k_num)
-            # plt.show()
-            # ani.save(fname_anim, writer='imagemagick')
-            ani.save('simulation.gif', writer="imagemagick")
-            # ani.save('simulation.mp4', writer="imagemagick")
-            utils.plot_result()
-            print("Finished to create .csv and .gif files.")
-        else:
-            utils.plot_result()
-            print("Finished to save .csv file.")
+        # if sets.MOV_FLAG:
+        #     # Create new directory
+        #     os.makedirs('AnimResults', exist_ok=True)
+        #     ani = animation.FuncAnimation(sets.fig, utils.update, interval=sets.Ts*1e3, frames=sets.k_num)
+        #     # plt.show()
+        #     # ani.save(fname_anim, writer='imagemagick')
+        #     ani.save('simulation.gif', writer="imagemagick")
+        #     # ani.save('simulation.mp4', writer="imagemagick")
+        #     utils.plot_result()
+        #     print("Finished to create .csv and .gif files.")
+        # else:
+        #     utils.plot_result()
+        #     print("Finished to save .csv file.")
 
 
 if __name__ == "__main__":
